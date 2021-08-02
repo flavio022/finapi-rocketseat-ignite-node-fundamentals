@@ -59,7 +59,6 @@ app.get("/statement", verifyIfExistAccountCPF, (request, response) => {
 app.post("/deposit", verifyIfExistAccountCPF, (request, response) => {
     const { description, amount } = request.body;
     const { customer } = request;
-    console.log(customer);
 
     const statementOperation = {
         description,
@@ -93,6 +92,23 @@ app.post("/withdraw", verifyIfExistAccountCPF, (request, response) => {
 
     return response.status(201).send();
 })
+app.get("/statement/date", verifyIfExistAccountCPF, (request, response) => {
+    const { customer } = request;
+    const { date } = request.query;
+    console.log(date);
+    const dateFormat = new Date(date + " 00:00");
+    customer.statements.forEach(element => {
+        console.log(element.created_at.toDateString());
+    });
+    console.log(dateFormat);
+    console.log(new Date(dateFormat).toDateString());
+
+    statement = customer.statements.filter((statement) =>
+        statement.created_at.toDateString() === new Date(dateFormat).toDateString());
+    return response.json(statement);
+});
+
+
 
 
 app.listen(3000);
